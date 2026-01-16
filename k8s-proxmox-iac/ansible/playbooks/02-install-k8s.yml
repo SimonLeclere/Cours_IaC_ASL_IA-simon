@@ -1,0 +1,137 @@
+---
+# ansible/playbooks/02-install-k8s.yml
+# Installation de Kubernetes (kubeadm, kubelet, kubectl) et containerd
+
+- name: Installer Kubernetes sur tous les nodes
+  hosts: all
+  become: yes
+  gather_facts: yes
+  vars:
+    k8s_version: "1.28"
+  tasks:
+    # ========================================================================
+    # INSTALLATION DE CONTAINERD (Runtime Container)
+    # ========================================================================
+
+    - name: Installer les dépendances pour containerd
+      apt:
+        name:
+          - containerd
+          - runc
+        state: present
+        update_cache: yes
+
+    - name: Créer le répertoire de configuration containerd
+      file:
+        path: /etc/containerd
+        state: directory
+        mode: '0755'
+
+    - name: Vérifier si la configuration containerd existe déjà
+      stat:
+        path: /etc/containerd/config.toml
+      register: containerd_config
+
+    - name: Générer la configuration par défaut de containerd
+      shell: containerd config default > /etc/containerd/config.toml
+      when: not containerd_config.stat.exists
+
+    - name: Activer SystemdCgroup dans containerd (requis pour Kubernetes)
+      replace:
+        path: /etc/containerd/config.toml
+        regexp: 'SystemdCgroup = false'
+        replace: 'SystemdCgroup = true'
+
+    - name: Redémarrer et activer containerd
+      systemd:
+        name: containerd
+        state: restarted
+        enabled: yes
+        daemon_reload: yes
+
+    - name: Vérifier que containerd est actif
+      systemd:
+        name: containerd
+        state: started
+      register: containerd_status
+      failed_when: containerd_status.status.ActiveState != "active"
+
+    # ========================================================================
+    # INSTALLATION DE KUBERNETES (kubeadm, kubelet, kubectl)
+    # ========================================================================
+
+    - name: Créer le répertoire pour les clés APT
+      file:
+        path: /etc/apt/keyrings
+        state: directory
+        mode: '0755'
+
+    - name: Télécharger la clé GPG de Kubernetes
+      shell: |
+        curl -fsSL https://pkgs.k8s.io/core:/stable:/v{{ k8s_version }}/deb/Release.key | \
+        gpg --dearmor -o /etc/apt/keyrings/kubernetes-apt-keyring.gpg
+      args:
+        creates: /etc/apt/keyrings/kubernetes-apt-keyring.gpg
+
+    - name: Ajouter le dépôt Kubernetes
+      apt_repository:
+        repo: "deb [signed-by=/etc/apt/keyrings/kubernetes-apt-keyring.gpg] https://pkgs.k8s.io/core:/stable:/v{{ k8s_version }}/deb/ /"
+        state: present
+        filename: kubernetes
+
+    - name: Mettre à jour le cache APT après ajout du dépôt
+      apt:
+        update_cache: yes
+
+    - name: Installer kubeadm, kubelet et kubectl
+      apt:
+        name:
+          - kubelet={{ k8s_version }}.*
+          - kubeadm={{ k8s_version }}.*
+          - kubectl={{ k8s_version }}.*
+        state: present
+        allow_downgrades: yes
+
+    - name: Verrouiller les versions des paquets Kubernetes (empêcher les mises à jour)
+      dpkg_selections:
+        name: "{{ item }}"
+        selection: hold
+      loop:
+        - kubelet
+        - kubeadm
+        - kubectl
+
+    - name: Activer et démarrer kubelet
+      systemd:
+        name: kubelet
+        enabled: yes
+        state: started
+        daemon_reload: yes
+
+    # ========================================================================
+    # VÉRIFICATIONS POST-INSTALLATION
+    # ========================================================================
+
+    - name: Vérifier la version de kubeadm installée
+      shell: kubeadm version -o short
+      register: kubeadm_version
+      changed_when: false
+
+    - name: Vérifier la version de kubelet installée
+      shell: kubelet --version
+      register: kubelet_version
+      changed_when: false
+
+    - name: Vérifier la version de kubectl installée
+      shell: kubectl version --client -o yaml | grep gitVersion
+      register: kubectl_version
+      changed_when: false
+
+    - name: Afficher le résumé de l'installation
+      debug:
+        msg:
+          - "✓ Containerd installé et configuré"
+          - "✓ {{ kubeadm_version.stdout }}"
+          - "✓ {{ kubelet_version.stdout }}"
+          - "✓ {{ kubectl_version.stdout }}"
+          - "✓ Node prêt pour l'initialisation du cluster"

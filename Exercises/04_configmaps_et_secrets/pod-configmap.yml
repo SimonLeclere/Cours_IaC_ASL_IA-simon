@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: nginx-config-test
+spec:
+  containers:
+  - name: nginx
+    image: nginx
+    env:
+    - name: WELCOME_MESSAGE
+      valueFrom:
+        configMapKeyRef:
+          name: nginx-config
+          key: welcome_message

@@ -1,0 +1,28 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: web-deployment
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: nginx-logiciel
+  template:
+    metadata:
+      labels:
+        app: nginx-logiciel
+    spec:
+      imagePullSecrets:
+      - name: regcred
+      containers:
+      - name: nginx
+        image: nginx
+        ports:
+        - containerPort: 80
+        volumeMounts:
+        - name: html-storage
+          mountPath: /usr/share/nginx/html/  # Nginx lira notre ConfigMap ici
+      volumes:
+      - name: html-storage
+        configMap:
+          name: web-html-config # Le nom de la ConfigMap créée à l'étape A

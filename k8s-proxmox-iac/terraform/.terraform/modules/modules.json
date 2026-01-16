@@ -1,0 +1,1 @@
+{"Modules":[{"Key":"","Source":"","Dir":"."},{"Key":"k8s_master","Source":"./modules/k8s-node","Dir":"modules/k8s-node"},{"Key":"k8s_worker1","Source":"./modules/k8s-node","Dir":"modules/k8s-node"},{"Key":"k8s_worker2","Source":"./modules/k8s-node","Dir":"modules/k8s-node"},{"Key":"k8s_worker3","Source":"./modules/k8s-node","Dir":"modules/k8s-node"}]}

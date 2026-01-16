@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: web-service-unique
+spec:
+  selector:
+    app: nginx-logiciel # Il cherche les pods avec ce label (ceux de notre Deployment !)
+  ports:
+    - protocol: TCP
+      port: 80          # Le port du Service
+      targetPort: 80    # Le port du Pod
+  type: ClusterIP       # IP interne uniquement

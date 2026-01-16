@@ -1,0 +1,52 @@
+---
+# ansible/playbooks/04-join-workers.yml
+# Jonction des workers au cluster Kubernetes
+
+- name: Joindre les workers au cluster
+  hosts: workers
+  become: yes
+  tasks:
+    - name: Vérifier si le node est déjà joint au cluster
+      stat:
+        path: /etc/kubernetes/kubelet.conf
+      register: kubelet_conf
+
+    - name: Lire la commande de jointure
+      set_fact:
+        join_command: "{{ lookup('file', '/tmp/k8s_join_command.sh') }}"
+      when: not kubelet_conf.stat.exists
+
+    - name: Joindre le worker au cluster
+      shell: "{{ join_command }}"
+      when: not kubelet_conf.stat.exists
+
+    - name: Attendre que le kubelet démarre
+      service:
+        name: kubelet
+        state: started
+      when: not kubelet_conf.stat.exists
+
+- name: Vérifier que tous les workers sont joints
+  hosts: masters
+  become: yes
+  become_user: ubuntu
+  tasks:
+    - name: Lister tous les nodes
+      shell: kubectl get nodes
+      register: nodes_output
+
+    - name: Afficher les nodes
+      debug:
+        msg: "{{ nodes_output.stdout_lines }}"
+
+    - name: Attendre que tous les workers soient Ready
+      shell: kubectl get nodes | grep -w "Ready" | wc -l
+      register: ready_nodes
+      until: ready_nodes.stdout | int == 4
+      retries: 30
+      delay: 10
+      changed_when: false
+
+    - name: Confirmation du cluster
+      debug:
+        msg: "✓ Cluster Kubernetes opérationnel avec {{ ready_nodes.stdout }} nodes"

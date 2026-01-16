@@ -1,0 +1,101 @@
+---
+# ansible/playbooks/01-prepare-nodes.yml
+# Préparation système de tous les nodes pour Kubernetes
+
+- name: Préparer tous les nodes du cluster
+  hosts: all
+  become: yes
+  gather_facts: yes
+  tasks:
+    - name: Mettre à jour le cache APT
+      apt:
+        update_cache: yes
+        cache_valid_time: 3600
+
+    - name: Installer les paquets système de base
+      apt:
+        name:
+          - apt-transport-https
+          - ca-certificates
+          - curl
+          - gnupg
+          - lsb-release
+          - software-properties-common
+          - net-tools
+          - vim
+          - htop
+          - git
+        state: present
+
+    - name: Vérifier si le swap est activé
+      shell: swapon --show
+      register: swap_status
+      changed_when: false
+      failed_when: false
+
+    - name: Désactiver le swap immédiatement (requis pour Kubernetes)
+      shell: swapoff -a
+      when: swap_status.stdout != ""
+
+    - name: Désactiver le swap de façon permanente dans /etc/fstab
+      replace:
+        path: /etc/fstab
+        regexp: '^([^#].*?\sswap\s+sw\s+.*)$'
+        replace: '# \1'
+
+    - name: Charger le module kernel overlay
+      modprobe:
+        name: overlay
+        state: present
+
+    - name: Charger le module kernel br_netfilter
+      modprobe:
+        name: br_netfilter
+        state: present
+
+    - name: Rendre persistant le chargement des modules kernel
+      copy:
+        dest: /etc/modules-load.d/k8s.conf
+        content: |
+          overlay
+          br_netfilter
+
+    - name: Configurer les paramètres sysctl pour Kubernetes
+      sysctl:
+        name: "{{ item.key }}"
+        value: "{{ item.value }}"
+        sysctl_set: yes
+        state: present
+        reload: yes
+      loop:
+        - { key: 'net.bridge.bridge-nf-call-iptables', value: '1' }
+        - { key: 'net.bridge.bridge-nf-call-ip6tables', value: '1' }
+        - { key: 'net.ipv4.ip_forward', value: '1' }
+
+    - name: Appliquer les paramètres sysctl immédiatement
+      shell: sysctl --system
+      changed_when: false
+
+    - name: Désactiver le firewall UFW (simplification pour TP)
+      service:
+        name: ufw
+        state: stopped
+        enabled: no
+      ignore_errors: yes
+
+    - name: Configurer /etc/hosts avec tous les nodes du cluster
+      lineinfile:
+        path: /etc/hosts
+        line: "{{ hostvars[item]['ansible_host'] }} {{ item }}"
+        state: present
+      loop: "{{ groups['all'] }}"
+      when: hostvars[item]['ansible_host'] is defined
+
+    - name: Afficher un résumé de la configuration
+      debug:
+        msg:
+          - "✓ Swap désactivé"
+          - "✓ Modules kernel chargés (overlay, br_netfilter)"
+          - "✓ Paramètres sysctl configurés"
+          - "✓ /etc/hosts mis à jour"
+          - "✓ Node prêt pour l'installation de Kubernetes"
