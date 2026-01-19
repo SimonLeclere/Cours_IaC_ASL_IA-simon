@@ -1332,11 +1332,54 @@ On voit que l’application Flask se connecte correctement à la base de donnée
 
 ### 7. Mise à jour du déploiement avec ArgoCD
 
-Directement sur l'interface github, on modifie le fichier `flask-app.yaml` pour augmenter le nombre de réplicas de 4 à 6 :
+On crée une application ArgoCD pour gérer le déploiement de l’application Flask. On crée un fichier argocd-app-definition.yml avec le contenu suivant :
 ```yaml
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: flask-postgres-app
+  namespace: argocd
 spec:
-  replicas: 6
+  project: default
+  source:
+    repoURL: 'https://github.com/SimonLeclere/mon-flask-app.git'
+    targetRevision: main
+    path: k8s
+  destination:
+    server: 'https://kubernetes.default.svc'
+    namespace: default
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
 ```
 
+Puis on applique le manifeste pour créer l’application ArgoCD :
+![alt text](assets/exercise14-14.png)
+
+On va maintenant essayer de modifier le déploiement via ArgoCD. On commence par vérifier l'état actuel de l’application, et notamment le nombre de réplicas :
+![alt text](assets/exercise14-15.png)
+
+On remarque que pour le moment, le nombre de réplicas est de 2.
+
+Maintenant, on va modifier le manifeste de déploiement pour augmenter le nombre de réplicas de 4 à 6.
+On modifie le fichier `flask-app.yaml` pour augmenter le nombre de réplicas de 2 à 4 :
+```yaml
+spec:
+  replicas: 4
+```
+On pousse ensuite cette modification dans le dépôt Git :
+![alt text](assets/exercise14-16.png)
+
+On peut maintenant voir la CI configurée dans GitHub Actions qui build et pousse automatiquement la nouvelle image Docker à chaque push sur la branche main :
+![alt text](assets/exercise14-17.png)
+
 Une fois la synchronisation effectuée par ArgoCD, on vérifie que le nombre de pods Flask a bien été mis à jour :
-![alt text](assets/exercise14-13.png)
+![alt text](assets/exercise14-18.png)
+
+On constate que le nombre de réplicas est bien passé à 4, ce qui confirme que la gestion du déploiement via ArgoCD fonctionne correctement !
+
+On peut maintenant accéder à l’application Flask via l’Ingress et vérifier que tout fonctionne correctement avec le nouveau nombre de réplicas :
+![alt text](assets/exercise14-19.png)
+
+L'application Flask fonctionne correctement avec la base de données Postgres, et le déploiement est géré efficacement via ArgoCD en suivant les principes du GitOps.
