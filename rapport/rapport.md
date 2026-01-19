@@ -88,7 +88,7 @@ On dispose d'un dossier `Exercises` contenant plusieurs exercices pratiques pour
 
 Pour certains, quelques questions de réflexion sont posées dans les fichiers README.md.
 
-## Exercice 01 — Déployer une application de test sur Kubernetes
+## Exercice 01 - Déployer une application de test sur Kubernetes
 
 Objectif : Déployer une application simple (`nginx`) sur un cluster Kubernetes afin de vérifier le bon fonctionnement du cluster, du réseau et des services.
 
@@ -128,7 +128,7 @@ Si on ouvre l'url, on voit bien la page d'accueil NGINX s'afficher:
 - Quelle est la différence entre un Service ClusterIP et NodePort ?
 > Un Service ClusterIP est le type de service par défaut dans Kubernetes. Il expose le service uniquement à l'intérieur du cluster, permettant aux pods de communiquer entre eux via une adresse IP interne. En revanche, un Service NodePort expose le service sur un port spécifique de chaque nœud du cluster, permettant l'accès au service depuis l'extérieur du cluster en utilisant l'adresse IP du nœud et le port NodePort attribué.
 
-## Exercice 02 — Mise à l’échelle (Scaling) d’une application
+## Exercice 02 - Mise à l’échelle (Scaling) d’une application
 
 Objectif : Apprendre à mettre à l’échelle un déploiement Kubernetes en modifiant le nombre de réplicas d’une application, et observer comment le cluster réagit automatiquement.
 
@@ -146,7 +146,7 @@ Enfin, on supprime un pod au hasard pour observer que Kubernetes recrée automat
 
 ![alt text](assets/exercise02-1.png)
 
-## Exercice 03 — Services Kubernetes et accès réseau
+## Exercice 03 - Services Kubernetes et accès réseau
 
 Objectif : Comprendre comment Kubernetes expose une application à l’intérieur et à l’extérieur du cluster en utilisant différents types de Services (`ClusterIP`, `NodePort`).
 
@@ -168,7 +168,7 @@ On remarque que le Service NodePort attribue un port externe (ici 31078) qui per
 
 ![alt text](assets/exercise03-2.png)
 
-## Exercice 04 — ConfigMaps & Secrets
+## Exercice 04 - ConfigMaps & Secrets
 
 Objectif : Apprendre à gérer la configuration et les secrets dans Kubernetes afin que les applications restent découplées de leur configuration et que les informations sensibles soient protégées.
 
@@ -230,7 +230,7 @@ spec:
 Puis on déploie le pod et on vérifie que la variable d’environnement est bien définie :
 ![alt text](assets/exercise04-3.png)
 
-## Exercice 05 — Rolling Update
+## Exercice 05 - Rolling Update
 
 Objectif : Apprendre à mettre à jour un déploiement Kubernetes sans interruption grâce aux rolling updates.
 
@@ -249,7 +249,7 @@ Dans cet exercice, on va mettre à jour l’image NGINX d’un déploiement exis
 
 On peut voir que les pods sont mis à jour progressivement, sans interruption de service. Kubernetes gère automatiquement le remplacement des pods et on peut revenir en arrière avec `rollout undo` si nécessaire.
 
-## Exercice 06 — Ingress
+## Exercice 06 - Ingress
 
 Objectif : Comprendre comment exposer plusieurs services Kubernetes via un point d’entrée unique avec Ingress.
 
@@ -300,7 +300,7 @@ Ensuite, on effectue une requête HTTP vers `example.local` :
 
 On peut voir que la requête est bien routée vers le service NGINX via Ingress.
 
-## Exercice 07 — Scaling & Déploiement avec Deployment
+## Exercice 07 - Scaling & Déploiement avec Deployment
 
 Objectif : Créer un deployment à partir d’un fichier YAML, comprendre le lien entre Deployment → ReplicaSet → Pods, et gérer le scaling.
 
@@ -354,7 +354,7 @@ On diminue le nombre de pods à 2 :
 
 On peut voir que Kubernetes ajuste automatiquement le nombre de pods en fonction du nombre de réplicas spécifié dans le Deployment.
 
-## Exercice 08 — Service interne ClusterIP
+## Exercice 08 - Service interne ClusterIP
 
 Objectif: Apprendre à exposer un Deployment uniquement à l’intérieur du cluster avec un service de type ClusterIP, et vérifier que les pods du Deployment sont bien accessibles via ce service.
 
@@ -395,7 +395,7 @@ On liste les endpoints du service pour vérifier qu’ils correspondent aux pods
 
 On peut voir que les IPs des pods du Deployment sont bien listées comme endpoints du service. Cela confirme que le service ClusterIP est correctement lié aux pods.
 
-## Exercice 09 — Déploiement avec ConfigMap comme volume
+## Exercice 09 - Déploiement avec ConfigMap comme volume
 
 Objectif : Apprendre à utiliser une ConfigMap pour stocker du contenu (ici une page HTML) et le monter dans un pod en tant que volume, afin que NGINX puisse servir ce contenu.
 
@@ -457,7 +457,7 @@ Enfin, on vérifie que la nouvelle page est bien servie par NGINX :
 
 On peut voir que NGINX sert bien le contenu mis à jour depuis la ConfigMap, démontrant ainsi comment utiliser une ConfigMap comme volume dans un pod Kubernetes.
 
-## Exercice 10 — Déployer MariaDB avec volume persistant
+## Exercice 10 - Déployer MariaDB avec volume persistant
 
 Objectif : Apprendre à déployer une base de données MariaDB sur Kubernetes en utilisant un PersistentVolume (PV) et un PersistentVolumeClaim (PVC) pour le stockage persistant des données.
 
@@ -586,7 +586,7 @@ Après le redémarrage, on se reconnecte à MariaDB et on vérifie que les donn�
 
 On peut voir que les données insérées avant le redémarrage du pod sont toujours présentes, ce qui confirme que le stockage persistant via le PersistentVolume et le PersistentVolumeClaim fonctionne correctement avec MariaDB sur Kubernetes.
 
-## Exercice 11 — Déployer une application PHP connectée à MariaDB
+## Exercice 11 - Déployer une application PHP connectée à MariaDB
 
 Objectif : Déployer une application PHP simple sur Kubernetes qui se connecte à une base de données MariaDB, en utilisant des ConfigMaps et des Secrets pour la configuration.
 
@@ -698,13 +698,13 @@ On en déduit:
 - **Le pod MariaDB :** `mariadb-6bdb6b75c-6qfc2` (IP: `10.244.3.25`, **Node :** `k8s-worker1`)
 - **Les pods PHP :** `php-app-569f46cdf7-hz84s` (IP: `10.244.1.22`, **node** `k8s-worker3`) et `php-app-569f46cdf7-tfps4` (IP: `10.244.2.38`, **node** `k8s-worker2`)
 - **Les services :**
-  - `mariadb-service` — **ClusterIP** `10.101.80.222` (port 3306) → point d’accès DB interne.
-  - `php-service` — **ClusterIP** `10.105.190.224` (port 80) → service interne pour l’app PHP.
-  - `nginx` — **NodePort** `10.102.91.113` (80:31506) → exposé sur les nœuds.
-  - `web-deployment` — **NodePort** `10.107.20.178` (80:32176).
-  - `web-service-unique` — **ClusterIP** `10.111.171.64` (port 80).
+  - `mariadb-service` - **ClusterIP** `10.101.80.222` (port 3306) → point d’accès DB interne.
+  - `php-service` - **ClusterIP** `10.105.190.224` (port 80) → service interne pour l’app PHP.
+  - `nginx` - **NodePort** `10.102.91.113` (80:31506) → exposé sur les nœuds.
+  - `web-deployment` - **NodePort** `10.107.20.178` (80:32176).
+  - `web-service-unique` - **ClusterIP** `10.111.171.64` (port 80).
 - **Les volumes utilisés :**
-  - PersistentVolume **`mariadb-pv`** (1Go) — **lié** à PersistentVolumeClaim **`mariadb-pvc`**. Ce stockage permet la persistance des données MariaDB.
+  - PersistentVolume **`mariadb-pv`** (1Go) - **lié** à PersistentVolumeClaim **`mariadb-pvc`**. Ce stockage permet la persistance des données MariaDB.
 - **Les Secrets & ConfigMaps :**
   - **Secrets :** `mariadb-pass` (contient la clé `password` utilisée par MariaDB), `db-secret`, `regcred` (docker registry cred).
   - **ConfigMaps :** `php-code` (contient `index.php` monté dans les pods PHP), `nginx-config`, `web-html-config`, `kube-root-ca.crt`.
@@ -805,3 +805,538 @@ affiche une erreur d’authentification MySQL (ex : `Access denied for user 'roo
 - **Que se passe-t-il si le nœud Kubernetes tombe ?**
   
   Si un nœud tombe, tous les pods qui y étaient hébergés deviennent indisponibles. Kubernetes détecte l’indisponibilité du nœud et recrée automatiquement les pods sur les autres nœuds disponibles (si les ressources le permettent), assurant ainsi la haute disponibilité de l’application.
+
+## Exercice 12 - Redéploiement et debug applicatif
+
+Objectif : Comprendre le lien entre ConfigMap et Pods, et identifier pourquoi une modification de ConfigMap ne provoque pas automatiquement un redéploiement.
+
+Dans cet exercice, on va modifier une ConfigMap utilisée par un pod, puis observer que le pod ne prend pas en compte la modification tant qu’il n’est pas redémarré. On expliquera pourquoi et comment forcer la prise en compte des modifications.
+
+On commence par créer le fichier nginx-configmap.yaml avec le contenu suivant :
+
+```yaml
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: new-php-code
+data:
+  index.php: |
+    <?php
+    $host = 'mariadb-service'; // On utilise le nom DNS du service créé à l'exo précédent
+    $db   = 'mabase';
+    $user = 'root';
+    $pass = getenv('DB_PASSWORD');;   // Le mot de passe défini dans ton Secret
+
+    try {
+        $dsn = "mysql:host=$host;dbname=$db;charset=utf8mb4";
+        $pdo = new PDO($dsn, $user, $pass);
+
+        echo "<body style='font-family:sans-serif; text-align:center; padding-top:50px; background-color:#f0fff4;'>";
+        echo "<h1 style='color:#2f855a;'>✅ Connexion Réussie !</h1>";
+        echo "<p>L'application PHP communique bien avec MariaDB sur le port 3306.</p>";
+        echo "<div style='border:1px solid #ccc; display:inline-block; padding:20px; border-radius:10px; background:white;'>";
+        echo "<b>Infos Cluster :</b><br>";
+        echo "Serveur DB : " . $host . "<br>";
+        echo "IP du Pod PHP : " . $_SERVER['SERVER_ADDR'];
+
+        $stmt = $pdo->query("SELECT contenu FROM posts");
+        while ($row = $stmt->fetch()) {
+         echo "<p>Contenu trouvé en base : <b>" . $row['contenu'] . "</b></p>";
+        }
+    } catch (PDOException $e) {
+        echo "<body style='font-family:sans-serif; text-align:center; padding-top:50px; background-color:#fff5f5;'>";
+        echo "<h1 style='color:#c53030;'>❌ Erreur de Connexion</h1>";
+        echo "<p>Message : " . $e->getMessage() . "</p>";
+        echo "</body>";
+    }
+    echo "</div></body>";
+    ?>
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: new-php-app
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: new-php-web
+  template:
+    metadata:
+      labels:
+        app: new-php-web
+    spec:
+      containers:
+      - name: php
+        image: php:8.0-apache
+        # On installe l'extension PDO MySQL au démarrage (astuce pour image de base)
+        command: ["sh", "-c", "docker-php-ext-install pdo pdo_mysql && apache2-foreground"]
+        ports:
+        - containerPort: 80
+        volumeMounts:
+        - name: code-volume
+          mountPath: /var/www/html/index.php
+          subPath: index.php
+      volumes:
+      - name: code-volume
+        configMap:
+          name: new-php-code
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: new-php-service
+spec:
+  type: ClusterIP
+  selector:
+    app: new-php-web
+  ports:
+    - port: 80
+      targetPort: 80
+```
+
+Puis on le déploie et on vérifie le déploiement avec les commandes suivantes:
+```bash
+kubectl apply -f php-app.yaml
+
+kubectl get pods
+kubectl get svc
+
+kubectl describe pod -l app=new-php-web
+kubectl describe svc new-php-service
+```
+
+On va maintenant exécuter la commande fournie dans le sujet:
+```bash
+kubectl run curlpod --rm -it --image=curlimages/curl --restart=Never -- curl http://new-php-service
+```
+
+On s'attend à voir le message de bienvenue défini dans la ConfigMap. Cependant, on constate à la place qu'on obtient une erreur de connexion à la base de données.
+
+![alt text](assets/exercise12.png)
+
+On remarque dans l'erreur, que la connexion s'est faite sans mot de passe (using password: NO), ce qui indique que la variable d'environnement `DB_PASSWORD` n'est pas injectée dans le pod.
+
+En examinant le code PHP dans la ConfigMap, on voit que la variable d'environnement `DB_PASSWORD` est utilisée pour récupérer le mot de passe de la base de données :
+```php
+$pass = getenv('DB_PASSWORD');;
+```
+
+Ce mot de passe est censé provenir d'un Secret Kubernetes, dont on peut d'ailleurs vérifier l'existence avec la commande:
+```bash
+kubectl get secret mariadb-pass -o yaml
+```
+![alt text](assets/exercise12-1.png)
+
+Vérifions que le pod `new-php-app` a bien accès à ce Secret en listant les variables d'environnement du pod:
+![alt text](assets/exercise12-2.png)
+
+On constate que la variable d'environnement `DB_PASSWORD` n'est pas définie dans le pod `new-php-app`. C'est la raison pour laquelle la connexion à MariaDB échoue.
+
+En comparant avec le pod de l'exercice précédent (`php-app`), on remarque que ce dernier a bien la variable `DB_PASSWORD` définie, car dans son manifeste, le pod utilise un Secret pour injecter cette variable d'environnement.
+
+Pour résoudre ce problème, on peut donc modifier le manifeste pour inclure la définition de la variable d'environnement `DB_PASSWORD` à partir du Secret `mariadb-pass`, comme ceci:
+```yaml
+        env:
+        - name: DB_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: mariadb-pass
+              key: password
+```
+
+En vérifiant l'état de la base de donnée, on constate aussi un autre problème: la table `posts` ne contient pas de colonne `contenu`, mais une colonne `content`. On corrige donc la requête SQL dans le code PHP pour refléter cette modification:
+```php
+$stmt = $pdo->query("SELECT content FROM posts");
+```
+
+Après avoir apporté ces modifications, on redéploie le manifeste corrigé et on redémarre les pods pour qu’ils prennent en compte les changements:
+![alt text](assets/exercise12-3.png)
+
+Enfin, on exécute à nouveau la commande curl pour tester l’application:
+![alt text](assets/exercise12-4.png)
+
+Tout fonctionne ! On voit que l’application PHP se connecte correctement à MariaDB et affiche les données de la table `posts`.
+
+## Exercice 13 - Accès via Ingress
+
+Objectif : Comprendre le rôle d'un Ingress dans Kubernetes pour exposer des services HTTP/S externes, et diagnostiquer les problèmes de routage.
+
+On commence par créer un fichier new-app-ingress.yaml avec le contenu suivant :
+```yaml
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: new-php-app-ingress
+  annotations:
+    nginx.ingress.kubernetes.io/ssl-redirect: "false"
+spec:
+  ingressClassName: nginx
+  rules:
+  - host: example.lab
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: new-php-service
+            port:
+              number: 80
+```
+
+Puis on applique le manifeste et on vérifie que l’Ingress est créé et qu'on peut y accéder via curl :
+![alt text](assets/exercise13.png)
+
+On constate que la requête curl vers `http://example.lab` échoue avec une erreur de connexion refusée.
+
+Si on teste sans Ingress, en mettant en place un port-forwarding vers le service `new-php-service`, on peut accéder à l’application PHP sans problème :
+![alt text](assets/exercise13-1.png)
+
+Cela indique que le service `new-php-service` fonctionne correctement, mais que l’Ingress ne parvient pas à router le trafic vers ce service.
+
+On vérifie la configuration de l’Ingress et on remarque que le nom d’hôte `example.lab` n’est pas résolu correctement. Pour que l’Ingress fonctionne, il faut que le nom d’hôte soit mappé à l’adresse IP du contrôleur Ingress (NGINX).
+
+On ajoute une entrée dans le fichier `/etc/hosts` de notre machine locale pour faire pointer `example.lab` vers l’IP du nœud (récupérée via `kubectl get nodes -o wide`).
+
+Ensuite, on effectue à nouveau une requête HTTP vers `example.lab`. On peut maintenant voir que la requête est maintenant correctement routée vers le service PHP via Ingress, et l’application fonctionne comme prévu.
+
+## Exercice 14 - Déployer une application Flask + Postgres avec ArgoCD
+
+Objectif : Construire et publier une image Docker, déployer une application Flask connectée à une base de données Postgres sur Kubernetes, et gérer le déploiement avec ArgoCD pour le GitOps.
+
+### 1. Mise en place
+
+On clone le repo fourni et on configure GitHub Actions avec les secrets nécessaires pour pousser l’image Docker vers Docker Hub: nom d'utilisateur et token d'accès.
+
+### 2. Installation d’ArgoCD sur le cluster Kubernetes
+
+On installe ArgoCD en appliquant les manifests officiels :
+```bash
+kubectl create namespace argocd
+
+kubectl apply -n argocd -f https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/install.yaml
+```
+
+On vérifie ensuite que tous les Pods sont bien prêts:
+![alt text](assets/exercise13-2.png)
+
+On exécute ensuite ce script pour configurer la résolution DNS dans les pods ArgoCD, afin de s'assurer qu'ils peuvent résoudre les noms de services internes du cluster Kubernetes :
+```bash
+# 1. Mise à jour de l'application-controller (StatefulSet)
+kubectl patch statefulset argocd-application-controller -n argocd --type strategic -p '
+spec:
+  template:
+    spec:
+      dnsPolicy: "None"
+      dnsConfig:
+        nameservers:
+          - 10.96.0.10
+          - 8.8.8.8
+          - 8.8.4.4
+        searches:
+          - argocd.svc.cluster.local
+          - svc.cluster.local
+          - cluster.local
+        options:
+          - name: ndots
+            value: "2"
+'
+
+# 2. Mise à jour du repo-server (Deployment)
+kubectl patch deployment argocd-repo-server -n argocd --type strategic -p '
+spec:
+  template:
+    spec:
+      dnsPolicy: "None"
+      dnsConfig:
+        nameservers:
+          - 10.96.0.10
+          - 8.8.8.8
+          - 8.8.4.4
+        searches:
+          - argocd.svc.cluster.local
+          - svc.cluster.local
+          - cluster.local
+        options:
+          - name: ndots
+            value: "2"
+'
+
+# 3. Redémarrage des composants pour appliquer les changements
+kubectl rollout restart statefulset argocd-application-controller -n argocd
+kubectl rollout restart deployment argocd-repo-server -n argocd
+
+# 4. Vérification du statut du déploiement
+kubectl rollout status statefulset argocd-application-controller -n argocd
+kubectl rollout status deployment argocd-repo-server -n argocd
+
+# [!IMPORTANT] Vérifiez que l'IP 10.96.0.10 correspond bien à l'IP du service kube-dns ou coredns dans votre cluster:
+(kubectl get svc -n kube-system).
+```
+
+![alt text](assets/exercise14.png)
+
+Ensuite, on récupère et on note le mot de passe initial pour se connecter à l’interface web d’ArgoCD :
+```bash
+kubectl get secret argocd-initial-admin-secret -n argocd -o jsonpath="{.data.password}" | base64 -d
+```
+-> `E81l4MGU1mjFPDNt`
+
+Enfin on vérifie que le pod ArgoCD est capable de résoudre le nom de domaine github.com :
+![alt text](assets/exercise14-1.png)
+
+### 3. Déploiement la base de donnée Postgres
+
+Avant de créer le fichier de déploiement pour la base de données Postgres, on crée :
+
+- Un **Secret** pour stocker le mot de passe de la base de données (ex : `postgres-secret`). Exemple :
+```bash
+kubectl create secret generic postgres-secret --from-literal=POSTGRES_PASSWORD='SuperSecret'
+```
+
+- Un **ConfigMap** pour la configuration de la base de données Postgres (ex : `postgres-config`). Exemple :
+```bash
+kubectl create configmap postgres-config --from-literal=POSTGRES_DB=mabase --from-literal=POSTGRES_USER=user
+```
+
+> Remarque : dans l'exemple ci‑dessus `POSTGRES_DB` et `POSTGRES_USER` sont utilisés par le déploiement Postgres et doivent correspondre aux variables dans le manifest.
+
+Il faut aussi créer le PersistentVolume (PV) pour le stockage persistant des données. On crée un fichier `postgres-pv.yaml` avec le contenu suivant :
+```yaml
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: postgres-pv
+spec:
+  capacity:
+    storage: 1Gi
+  accessModes:
+    - ReadWriteOnce
+  persistentVolumeReclaimPolicy: Retain
+  storageClassName: ""   # PV "statique" sans StorageClass
+  hostPath:
+    path: "/mnt/data-postgres"
+```
+
+Important : avant d'appliquer ce PV, il faut bien penser à créer le répertoire sur le noeud ciblé et définir les permissions :
+```bash
+sudo mkdir -p /mnt/data-postgres
+sudo chown 999:999 /mnt/data-postgres
+```
+
+Puis on applique la configuration:
+![alt text](assets/exercise14-5.png)
+
+On peut ensuite créer le manifest pour la configuration de la base de données Postgres et la déployer (PVC, Deployment, Service) :
+```yaml
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: postgres-pvc
+  labels:
+    app: postgres
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: postgres
+  labels:
+    app: postgres
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: postgres
+  template:
+    metadata:
+      labels:
+        app: postgres
+    spec:
+      containers:
+        - name: postgres
+          image: postgres:15
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 5432
+              name: postgres
+          env:
+            - name: POSTGRES_DB
+              valueFrom:
+                configMapKeyRef:
+                  name: postgres-config
+                  key: POSTGRES_DB
+                  optional: true
+            - name: POSTGRES_USER
+              valueFrom:
+                configMapKeyRef:
+                  name: postgres-config
+                  key: POSTGRES_USER
+                  optional: true
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: postgres-secret
+                  key: POSTGRES_PASSWORD
+          volumeMounts:
+            - name: data
+              mountPath: /var/lib/postgresql/data
+          readinessProbe:
+            tcpSocket:
+              port: 5432
+            initialDelaySeconds: 10
+            periodSeconds: 5
+          livenessProbe:
+            tcpSocket:
+              port: 5432
+            initialDelaySeconds: 30
+            periodSeconds: 10
+      volumes:
+        - name: data
+          persistentVolumeClaim:
+            claimName: postgres-pvc
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: postgres-service
+  labels:
+    app: postgres
+spec:
+  type: ClusterIP
+  ports:
+    - port: 5432
+      targetPort: 5432
+      protocol: TCP
+      name: postgres
+  selector:
+    app: postgres
+```
+![alt text](assets/exercise14-4.png)
+
+Vérification : une fois appliqués, on vérifie bien que le PV et le PVC sont **Bound** :
+![alt text](assets/exercise14-9.png)
+
+On vérifie ensuite que le pod Postgres est en cours d’exécution et que le service est accessible :
+![alt text](assets/exercise14-6.png)
+
+### 4. Création de l'image Docker de l'application Flask
+
+On va maintenant créer l’image Docker pour l’application Flask.
+
+On dispose déjà d'un fichier Dockerfile minimal dans le répertoire `app`. On peut donc directement construire l’image Docker en utilisant la commande suivante :
+![alt text](assets/exercise14-7.png)
+
+On pousse ensuite l’image vers Docker Hub :
+```bash
+docker login
+docker push simonleclere/flask-postgres-app:latest
+```
+
+![alt text](assets/exercise14-8.png)
+
+On a maintenant l’image Docker de l’application Flask disponible sur Docker Hub.
+
+### 5. Déploiement de l'application Flask sur Kubernetes
+
+On crée un fichier flask-app.yaml avec le contenu suivant :
+```yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: flask-app
+spec:
+  replicas: 4
+  selector:
+    matchLabels:
+      app: flask
+  template:
+    metadata:
+      labels:
+        app: flask
+    spec:
+      hostAliases: # <-- Ton bypass DNS pour GitHub si besoin de fetch des libs
+      - ip: "140.82.121.3"
+        hostnames: ["github.com"]
+      containers:
+      - name: flask-app
+        image: aabda2006/flask-app:latest # À remplacer après ton build
+        imagePullPolicy: Always
+        env:
+        - name: DB_HOST
+          value: "postgres-service"
+        - name: DB_NAME
+          valueFrom: { configMapKeyRef: { name: db-config, key: POSTGRES_DB } }
+        - name: DB_USER
+          valueFrom: { configMapKeyRef: { name: db-config, key: POSTGRES_USER } }
+        - name: DB_PASSWORD
+          valueFrom: { secretKeyRef: { name: db-secret, key: POSTGRES_PASSWORD } }
+        ports:
+        - containerPort: 5000
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: flask-service
+spec:
+  selector:
+    app: flask
+  ports:
+  - port: 80
+    targetPort: 5000
+```
+
+Puis on applique le manifeste et on vérifie que le pod Flask est créé et en cours d’exécution :
+![alt text](assets/exercise14-10.png)
+
+### 6. Déploiemnt de l'Ingress
+
+On va déployer un Ingress pour exposer l’application Flask. On crée un fichier ingress.yaml avec le contenu suivant :
+```yaml
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: flask-app-ingress
+  annotations:
+    kubernetes.io/ingress.class: nginx
+spec:
+  rules:
+  - host: flask.lab
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: flask-service
+            port:
+              number: 80
+```
+
+Puis on applique le manifeste puis on vérifie que l’Ingress est créé :
+![alt text](assets/exercise14-11.png)
+
+
+Pour simplifier l'accès, on peut identifier l’IP du noeud Kubernetes pour accéder à l’Ingress et l'ajouter dans le fichier `/etc/hosts` pour le nom `flask.lab`.
+
+Enfin, on peut curl l'application ou essayer d'y accéder pour vérifier que tout fonctionne :
+![alt text](assets/exercise14-12.png)
+
+On voit que l’application Flask se connecte correctement à la base de données Postgres et affiche le nombre de visites stockées en base.
+
+### 7. Mise à jour du déploiement avec ArgoCD
+
+Directement sur l'interface github, on modifie le fichier `flask-app.yaml` pour augmenter le nombre de réplicas de 4 à 6 :
+```yaml
+spec:
+  replicas: 6
+```
+
+Une fois la synchronisation effectuée par ArgoCD, on vérifie que le nombre de pods Flask a bien été mis à jour :
+![alt text](assets/exercise14-13.png)

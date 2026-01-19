@@ -109,7 +109,13 @@ spec:
 
 ## Q1 — Observation
 Déployer et l'application et vérifier les pods et services associés:
-
+```bash
+kubectl apply -f php-app.yaml
+kubectl get pods
+kubectl get svc
+kubectl describe pod -l app=new-php-web
+kubectl describe svc new-php-service
+```
 Que retourne l’application lorsqu’on exécute :
 
 kubectl run curlpod --rm -it --image=curlimages/curl --restart=Never -- curl http://new-php-service
@@ -144,11 +150,18 @@ Quelle section du Deployment permettrait de l’injecter ?
 
 Connectez-vous au Pod MariaDB :
 
-Listez les tables de la base mabase
+```bash
+kubectl exec -it <nom-du-pod-mariadb> -- mariadb -uroot -p
+```
 
-La table posts existe-t-elle ?
+Listez les tables de la base `mabase` :
 
-Quelle table existe réellement ?
+```sql
+USE mabase;
+SHOW TABLES;
+```
+
+Vérifiez si la table `posts` existe et identifiez la table réellement présente.
 
 ### 🛠 Travail demandé
 

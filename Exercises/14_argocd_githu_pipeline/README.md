@@ -121,7 +121,7 @@ kubectl rollout restart deployment argocd-repo-server -n argocd
 kubectl rollout status statefulset argocd-application-controller -n argocd
 kubectl rollout status deployment argocd-repo-server -n argocd
 
-[!IMPORTANT] Vérifiez que l'IP 10.96.0.10 correspond bien à l'IP du service kube-dns ou coredns dans votre cluster:
+# [!IMPORTANT] Vérifiez que l'IP 10.96.0.10 correspond bien à l'IP du service kube-dns ou coredns dans votre cluster:
 (kubectl get svc -n kube-system).
 
 ```

@@ -1,0 +1,84 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: new-php-code
+data:
+  index.php: |
+    <?php
+    $host = 'mariadb-service'; // On utilise le nom DNS du service créé à l'exo précédent
+    $db   = 'mabase';
+    $user = 'root';
+    $pass = getenv('DB_PASSWORD');;   // Le mot de passe défini dans ton Secret
+
+    try {
+        $dsn = "mysql:host=$host;dbname=$db;charset=utf8mb4";
+        $pdo = new PDO($dsn, $user, $pass);
+
+        echo "<body style='font-family:sans-serif; text-align:center; padding-top:50px; background-color:#f0fff4;'>";
+        echo "<h1 style='color:#2f855a;'>✅ Connexion Réussie !</h1>";
+        echo "<p>L'application PHP communique bien avec MariaDB sur le port 3306.</p>";
+        echo "<div style='border:1px solid #ccc; display:inline-block; padding:20px; border-radius:10px; background:white;'>";
+        echo "<b>Infos Cluster :</b><br>";
+        echo "Serveur DB : " . $host . "<br>";
+        echo "IP du Pod PHP : " . $_SERVER['SERVER_ADDR'];
+
+        $stmt = $pdo->query("SELECT content FROM posts");
+        while ($row = $stmt->fetch()) {
+         echo "<p>Contenu trouvé en base : <b>" . $row['content'] . "</b></p>";
+        }
+    } catch (PDOException $e) {
+        echo "<body style='font-family:sans-serif; text-align:center; padding-top:50px; background-color:#fff5f5;'>";
+        echo "<h1 style='color:#c53030;'>❌ Erreur de Connexion</h1>";
+        echo "<p>Message : " . $e->getMessage() . "</p>";
+        echo "</body>";
+    }
+    echo "</div></body>";
+    ?>
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: new-php-app
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: new-php-web
+  template:
+    metadata:
+      labels:
+        app: new-php-web
+    spec:
+      containers:
+      - name: php
+        image: php:8.0-apache
+        # On installe l'extension PDO MySQL au démarrage (astuce pour image de base)
+        command: ["sh", "-c", "docker-php-ext-install pdo pdo_mysql && apache2-foreground"]
+        ports:
+        - containerPort: 80
+        env:
+        - name: DB_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: mariadb-pass
+              key: password
+        volumeMounts:
+        - name: code-volume
+          mountPath: /var/www/html/index.php
+          subPath: index.php
+      volumes:
+      - name: code-volume
+        configMap:
+          name: new-php-code
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: new-php-service
+spec:
+  type: ClusterIP
+  selector:
+    app: new-php-web
+  ports:
+    - port: 80
+      targetPort: 80
