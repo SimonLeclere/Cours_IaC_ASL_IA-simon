@@ -12,12 +12,12 @@ spec:
       labels:
         app: flask
     spec:
-      hostAliases: # <-- Ton bypass DNS pour GitHub si besoin de fetch des libs
+      hostAliases:
       - ip: "140.82.121.3"
         hostnames: ["github.com"]
       containers:
       - name: flask-app
-        image: aabda2006/flask-app:latest # À remplacer après ton build
+        image: simonleclere/flask-postgres-app:latest
         imagePullPolicy: Always
         env:
         - name: DB_HOST
